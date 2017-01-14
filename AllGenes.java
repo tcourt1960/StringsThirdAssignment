@@ -87,7 +87,21 @@ public class AllGenes {
     }
     
     
+    public float countCTG(String dna) {
+        int count =0;
+        int startIndex = 0;
+        startIndex = dna.indexOf("CTG",startIndex);
+        if (startIndex == -1) 
+            return 0;
+         while (startIndex != -1) {
+         count = count + 1;
+         startIndex =dna.indexOf("CTG",startIndex+3); 
+    }
+    return count;
+}
+    
     public void testOn(String dna) {
+        System.out.println("CTG count is " + countCTG(dna));
         cgRatio(dna);
         System.out.println("Testing printAllGenes on " + dna);
         StorageResource genes = getAllGenes(dna);
@@ -97,7 +111,7 @@ public class AllGenes {
     }
     public void test() {
         //       ATGv__v__v__v__v__v__v__ 
-        testOn("AATGCTAACTAGCTGACTAATATGCCCGGGTAAATGGGGCCCTGA");
+        testOn("AATGCTGAACTAGCTAACTAATATGCTAGGGTAAATGGGGCCCTAA");
 
     }
 }
