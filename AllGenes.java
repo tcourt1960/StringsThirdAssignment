@@ -53,7 +53,7 @@ public class AllGenes {
     public StorageResource getAllGenes(String dna) {
       
         StorageResource geneList= new StorageResource();
-        
+        int foundGenes =0;
         //Set startIndex to 0
       int startIndex = 0;
       //Repeat the following steps
@@ -66,20 +66,21 @@ public class AllGenes {
           }
           //Print that gene out
          geneList.add(currentGene);
-         
+         foundGenes=foundGenes+1;
           //Set startIndex to just past the end of the gene
           startIndex = dna.indexOf(currentGene, startIndex) +
                        currentGene.length();
         }
+        System.out.println("Found " + foundGenes + " genes");
         return geneList;
     }
     
     public float cgRatio(String dna) {
         int count = dna.length() - dna.replace("C", "").length();
         count = count + dna.length() - dna.replace("G", "").length();
-        System.out.println("The Count is " + count);
+        //System.out.println("The Count is " + count);
         float ratio = (float)count/dna.length();
-        System.out.println(ratio);
+        //System.out.println(ratio);
         return ratio;
         
 
@@ -100,18 +101,61 @@ public class AllGenes {
     return count;
 }
     
-    public void testOn(String dna) {
-        System.out.println("CTG count is " + countCTG(dna));
-        cgRatio(dna);
-        System.out.println("Testing printAllGenes on " + dna);
-        StorageResource genes = getAllGenes(dna);
-        for (String g:genes.data()) {
+public void processGenes(StorageResource sr) {
+    //print all the strings in sr
+    System.out.println("Here are all genes found");
+    for(String g:sr.data()) {
+            System.out.println(g);   
+        }
+        
+    System.out.println("Here are all genes longer than 60 characters"); 
+    int count9=0;
+    for(String g:sr.data()) {
+        if (g.length()>60){
+            count9=count9+1;
             System.out.println(g);
         }
     }
+        
+    System.out.println("Number of strings longer than 9 chars is " + count9);   
+    
+    System.out.println("Here are the CG ratios for each gene ");
+        count9=0;
+    for(String g:sr.data()) {
+      if (cgRatio(g)>0.35) count9=count9+1;
+      System.out.println(g + "   "  + cgRatio(g));
+      System.out.println("There are "+count9+" ratios > 0.35");
+        }
+ 
+    int longestGeneLength = 0;
+    String longestGene ="";
+    for (String g: sr.data()){
+        if (g.length()>longestGeneLength) {
+            longestGeneLength = g.length();
+            longestGene= g;
+        }
+    }
+    System.out.println("The longest gene is "+longestGeneLength);
+    
+}
+
+
+
+    public void testOn(String dna) {
+        System.out.println("CTG count is " + countCTG(dna));
+        //cgRatio(dna);
+        System.out.println("Testing process AllGenes on " + dna);
+        StorageResource genes = getAllGenes(dna);
+        processGenes(genes);
+        }
+    
     public void test() {
         //       ATGv__v__v__v__v__v__v__ 
-        testOn("AATGCTGAACTAGCTAACTAATATGCTAGGGTAAATGGGGCCCTAA");
+        FileResource fr = new FileResource("GRch38dnapart.fa.txt");
+        String dna = fr.asString();
+        dna = dna.toUpperCase();
+        dna = dna.toUpperCase();
+        testOn(dna);
 
     }
 }
